@@ -6,6 +6,7 @@ int flagCount; // 共插了幾支旗
 int nSlot; // 分割 nSlot*nSlot格
 int totalSlots; // 總格數
 final int SLOT_SIZE = 100; //每格大小
+boolean turn;
 
 int sideLength; // SLOT_SIZE * nSlot
 int ix; // (width - sideLength)/2
@@ -46,6 +47,7 @@ void setup(){
   iy = (height - sideLength)/2; // initial y
   
   gameState = GAME_START;
+  
 }
 
 void draw(){
@@ -67,7 +69,10 @@ void draw(){
           break;
     case GAME_RUN:
           //---------------- put you code here ----
-
+      
+       
+          
+          
           // -----------------------------------
           break;
     case GAME_WIN:
@@ -96,7 +101,15 @@ void setBombs(){
     }
   }
   // -------------- put your code here ---------
-  // randomly set bombs
+  // randomly set bombs  
+    // loop repeat
+    int[] bomb = new int[10];
+    for (int n = 0; n < bombCount ; n++ ) {
+    int x = (int)random(4);
+    int y = (int)random(4);
+    slot[x][y] = SLOT_BOMB;
+    bomb[n]=slot[x][y];
+    } 
 
   // ---------------------------------------
 }
@@ -165,6 +178,8 @@ void mouseClicked(){
        setBombs();
        drawEmptySlots();
        gameState = GAME_RUN;
+       
+     
   }
 }
 
@@ -172,13 +187,25 @@ void mousePressed(){
   if ( gameState == GAME_RUN &&
        mouseX >= ix && mouseX <= ix+sideLength && 
        mouseY >= iy && mouseY <= iy+sideLength){
-    
-    // --------------- put you code here -------     
+     
+    // --------------- put you code here -------
+      int col = (mouseX-ix)/SLOT_SIZE;
+      int row = (mouseY-iy)/SLOT_SIZE;
+        if (mouseButton == LEFT){
+        if (slot[col][row] == SLOT_BOMB ){
+          showSlot(col, row, SLOT_DEAD);
+          gameState = GAME_LOSE;
+      } else if (slot[col][row] == SLOT_OFF ) {
+          showSlot(col, row, SLOT_SAFE);
+      }   
+    } 
+        
+         
 
     // -------------------------
-    
+       }
   }
-}
+
 
 // press enter to start
 void keyPressed(){
